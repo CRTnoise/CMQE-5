@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CV Index</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--fg:#111;--bg:#f7f7f5;--mute:#8c8c88;--line:#111;--faint:rgba(0,0,0,.055);--acc:#ff4f00}
+@media (prefers-color-scheme:dark){:root{--fg:#e9e9e6;--bg:#0c0c0c;--mute:#6f6f6b;--line:#e9e9e6;--faint:rgba(255,255,255,.05)}}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg)}
+body{color:var(--fg);font:14px/1.6 "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  background:linear-gradient(var(--faint) 1px,transparent 1px) 0 0/24px 24px,linear-gradient(90deg,var(--faint) 1px,transparent 1px) 0 0/24px 24px;
+  min-height:100vh}
+.wrap{max-width:760px;margin:0 auto;padding:28px 16px 40px}
+a{color:inherit}
+.mute{color:var(--mute)}
+.up{text-transform:uppercase;letter-spacing:.12em;font-size:11px}
+button{font:inherit;color:inherit;background:var(--bg);border:1px solid var(--line);padding:3px 12px;cursor:pointer}
+button:hover{background:var(--fg);color:var(--bg)}
+
+/* header + ruler */
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;padding-bottom:10px}
+h1{font-size:15px;font-weight:600;letter-spacing:.14em}
+h1 b{color:var(--acc);font-weight:600}
+.right{display:flex;align-items:center;gap:14px}
+.dot{display:inline-block;width:6px;height:6px;background:var(--acc);margin-right:6px;vertical-align:1px;animation:blink 2s steps(1) infinite}
+@keyframes blink{50%{opacity:.25}}
+.ruler{height:9px;border-top:1px solid var(--line);
+  background:repeating-linear-gradient(90deg,var(--mute) 0 1px,transparent 1px 8px) top/100% 4px no-repeat,
+             repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 64px) top/100% 9px no-repeat}
+.meta{margin:8px 0 22px}
+
+/* table */
+.row{display:grid;grid-template-columns:4.2em 1fr auto 6.5em;gap:12px;align-items:baseline;padding:13px 10px;border-bottom:1px solid var(--line);text-decoration:none;transition:box-shadow .15s,background .15s}
+.thead{padding:0 10px 6px;border-bottom:1px solid var(--line)}
+a.row:hover,a.row:focus-visible{background:var(--bg);box-shadow:inset 3px 0 0 var(--acc);outline:none}
+a.row:hover .arr{transform:translateX(3px);color:var(--acc)}
+.name{font-weight:600}
+.st{text-align:right;font-size:12px}
+.st.ok::before{content:"";display:inline-block;width:6px;height:6px;background:var(--acc);margin-right:6px;vertical-align:1px}
+.arr{display:inline-block;transition:transform .15s}
+@media (max-width:560px){.row{grid-template-columns:3.6em 1fr 5.6em}.role{display:none}}
+
+/* viewer */
+#view{display:none}
+.back{text-decoration:none;display:inline-block;margin-bottom:14px}
+.back:hover{color:var(--acc)}
+.card{border:1px solid var(--line);background:var(--bg);display:grid;grid-template-columns:1fr auto}
+.card .who{padding:16px;border-right:1px solid var(--line)}
+.card h2{font-size:20px;font-weight:600;line-height:1.3}
+.card p{margin-top:10px}
+.links{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:12px}
+.links a{text-decoration:none;border-bottom:1px solid var(--mute)}
+.links a:hover{color:var(--acc);border-color:var(--acc)}
+dl{display:grid;grid-template-columns:auto 1fr;align-content:start;font-size:12px}
+dt,dd{padding:5px 12px;border-bottom:1px solid var(--line)}
+dt{color:var(--mute);text-transform:uppercase;letter-spacing:.1em;font-size:11px;border-right:1px solid var(--line)}
+dd{max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+dt:nth-last-of-type(1),dd:nth-last-of-type(1){border-bottom:0}
+@media (max-width:560px){.card{grid-template-columns:1fr}.card .who{border-right:0;border-bottom:1px solid var(--line)}dd{max-width:none}}
+#pages{margin-top:22px}
+#pages .log{font-size:12px}
+figure{margin-bottom:22px}
+figcaption{font-size:11px;margin-bottom:6px;display:flex;justify-content:space-between}
+.pg{position:relative}
+.pg canvas{display:block;width:100%;background:#fff;border:1px solid var(--mute)}
+.pg::before,.pg::after{content:"";position:absolute;width:12px;height:12px;border-color:var(--line);border-style:solid}
+.pg::before{left:-6px;top:-6px;border-width:1px 0 0 1px}
+.pg::after{right:-6px;bottom:-6px;border-width:0 1px 1px 0}
+.dl{display:inline-block;text-decoration:none;border:1px solid var(--line);padding:3px 12px}
+.dl:hover{background:var(--fg);color:var(--bg)}
+
+/* footer */
+footer{margin-top:28px;padding-top:8px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;font-size:11px}
+@media (hover:none){.keys,.xy{display:none}}
+
+/* qr */
+dialog{margin:auto;border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:0;min-width:280px}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+.dh{display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--line)}
+.db{padding:18px;text-align:center}
+#qr{background:#fff;padding:12px;display:inline-block;position:relative}
+#qrUrl{font-size:11px;margin-top:12px;word-break:break-all;max-width:264px;margin-inline:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>CV<b>/</b>INDEX</h1>
+  <div class="right">
+    <span class="up mute"><span class="dot"></span><span id="clock">--:--:--</span></span>
+    <button id="qrBtn" title="Show QR (q)">QR</button>
+  </div>
+</header>
+<div class="ruler"></div>
+<div class="meta up mute" id="meta">rev 1.1 · static · pdf.js</div>
+
+<main id="list">
+  <div class="row thead up mute"><span>id</span><span>name</span><span class="role">role</span><span class="st">file</span></div>
+  <nav id="people"></nav>
+</main>
+
+<section id="view">
+  <a class="back up" href="#">← index</a>
+  <div class="card">
+    <div class="who">
+      <div class="up mute" id="vId"></div>
+      <h2 id="vName"></h2>
+      <div id="vRole" class="mute"></div>
+      <p id="vInfo"></p>
+      <div id="vLinks" class="links"></div>
+    </div>
+    <dl id="spec"></dl>
+  </div>
+  <div id="pages"></div>
+</section>
+
+<footer class="mute up">
+  <span><span class="keys">keys 1–5 · esc · q</span></span>
+  <span class="xy" id="xy">x 0000 · y 0000</span>
+</footer>
+
+</div>
+
+<dialog id="qrDlg">
+  <div class="dh up"><span>scan <span class="mute" id="qrTarget"></span></span><span class="mute">ecc · m</span></div>
+  <div class="db">
+    <div id="qr"></div>
+    <div id="qrUrl" class="mute"></div>
+    <button style="margin-top:14px" onclick="qrDlg.close()">close</button>
+  </div>
+</dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* ============ EDIT HERE ============
+   pdf: a file in this repo (e.g. "cvs/1.pdf"),
+   or a raw GitHub link from any repo, e.g.
+   "https://raw.githubusercontent.com/USER/REPO/main/cv.pdf"
+   Leave a link empty ("") to hide it.
+==================================== */
+const PEOPLE = [
+  { name: "Djamel-Eddine Khelili", role: "M2 TITaN · Évry Paris-Saclay",
+    info: "Developer. Immersive tech, AI agents, P2P apps.",
+    pdf: "cvs/1.pdf",
+    links: { email: "", github: "https://github.com/DjamelEddineKhelili", linkedin: "", site: "https://crtnoise.github.io/Port-folio/" } },
+  { name: "Name 2", role: "Role", info: "One or two lines about you.", pdf: "cvs/2.pdf",
+    links: { email: "", github: "", linkedin: "", site: "" } },
+  { name: "Name 3", role: "Role", info: "One or two lines about you.", pdf: "cvs/3.pdf",
+    links: { email: "", github: "", linkedin: "", site: "" } },
+  { name: "Name 4", role: "Role", info: "One or two lines about you.", pdf: "cvs/4.pdf",
+    links: { email: "", github: "", linkedin: "", site: "" } },
+  { name: "Name 5", role: "Role", info: "One or two lines about you.", pdf: "cvs/5.pdf",
+    links: { email: "", github: "", linkedin: "", site: "" } },
+];
+/* =================================== */
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, "0");
+const cvId = i => "CV-" + pad(i + 1);
+const size = n => !n ? "—" : n < 1024 ? n + " B" : n < 1048576 ? Math.round(n / 1024) + " KB" : (n / 1048576).toFixed(1) + " MB";
+function el(tag, props = {}, text) {
+  const e = Object.assign(document.createElement(tag), props);
+  if (text != null) e.textContent = text;
+  return e;
+}
+
+$("meta").textContent = `rev 1.1 · ${pad(PEOPLE.length)} entries · static · pdf.js`;
+
+// index + live file check
+PEOPLE.forEach((p, i) => {
+  const st = el("span", { className: "st mute" }, "probe…");
+  const a = el("a", { href: "#/" + (i + 1), className: "row" });
+  a.append(el("span", { className: "mute" }, cvId(i)),
+           el("span", { className: "name" }, p.name),
+           el("span", { className: "role mute" }, p.role || ""),
+           st);
+  $("people").append(a);
+  fetch(p.pdf, { method: "HEAD", cache: "no-store" })
+    .then(r => { if (!r.ok) throw 0; st.textContent = size(+r.headers.get("content-length")) || "ok"; st.classList.add("ok"); })
+    .catch(() => { st.textContent = "empty"; });
+});
+
+// spec sheet
+function spec(rows) {
+  const dl = $("spec"); dl.replaceChildren();
+  for (const [k, v] of rows) dl.append(el("dt", {}, k), el("dd", { title: v }, v));
+}
+
+// viewer
+let token = 0;
+async function renderPdf(p, i) {
+  const my = ++token, box = $("pages"), t0 = performance.now();
+  const base = [["id", cvId(i)], ["file", p.pdf.split("/").pop()]];
+  spec([...base, ["pages", "…"], ["size", "…"], ["render", "…"]]);
+  box.replaceChildren(el("p", { className: "log mute" }, `> fetch ${p.pdf}`));
+  try {
+    const pdf = await pdfjsLib.getDocument(p.pdf).promise;
+    if (my !== token) return;
+    const info = await pdf.getDownloadInfo().catch(() => ({}));
+    box.replaceChildren();
+    const dpr = window.devicePixelRatio || 1, total = pdf.numPages;
+    for (let n = 1; n <= total; n++) {
+      const page = await pdf.getPage(n);
+      if (my !== token) return;
+      const fig = el("figure"), wrap = el("div", { className: "pg" });
+      const cap = el("figcaption", { className: "up mute" });
+      cap.append(el("span", {}, `p.${pad(n)} / ${pad(total)}`), el("span", {}, cvId(i)));
+      fig.append(cap, wrap); box.append(fig);
+      const scale = (wrap.clientWidth / page.getViewport({ scale: 1 }).width) * dpr;
+      const vp = page.getViewport({ scale });
+      const c = el("canvas", { width: vp.width, height: vp.height });
+      wrap.append(c);
+      await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise;
+    }
+    if (my !== token) return;
+    spec([...base, ["pages", pad(total)], ["size", size(info.length)], ["render", Math.round(performance.now() - t0) + " ms"]]);
+    box.append(el("a", { className: "dl up", href: p.pdf, download: "" }, "↓ download pdf"));
+  } catch (e) {
+    if (my !== token) return;
+    spec([...base, ["pages", "—"], ["size", "—"], ["status", "404"]]);
+    box.replaceChildren(el("p", { className: "log mute" }, "> 404 · no CV uploaded yet"));
+  }
+}
+
+function current() {
+  const m = location.hash.match(/^#\/(\d+)$/);
+  const i = m ? +m[1] - 1 : -1;
+  return PEOPLE[i] ? i : -1;
+}
+
+function route() {
+  const i = current(), p = PEOPLE[i];
+  $("list").style.display = p ? "none" : "";
+  $("view").style.display = p ? "block" : "none";
+  if (!p) { token++; return; }
+  $("vId").textContent = `${cvId(i)} / ${pad(PEOPLE.length)}`;
+  $("vName").textContent = p.name;
+  $("vRole").textContent = p.role || "";
+  $("vInfo").textContent = p.info || "";
+  const L = $("vLinks"); L.replaceChildren();
+  for (const [k, v] of Object.entries(p.links || {})) {
+    if (!v) continue;
+    L.append(el("a", { href: k === "email" ? "mailto:" + v : v, target: "_blank", rel: "noopener" }, k + " ↗"));
+  }
+  window.scrollTo(0, 0);
+  renderPdf(p, i);
+}
+addEventListener("hashchange", route);
+route();
+
+// QR (encodes the current page — on a CV it links straight to that person)
+function showQR() {
+  const url = location.href, i = current();
+  $("qr").replaceChildren();
+  new QRCode($("qr"), { text: url, width: 240, height: 240, colorDark: "#000", colorLight: "#fff", correctLevel: QRCode.CorrectLevel.M });
+  $("qrTarget").textContent = "→ " + (i < 0 ? "index" : cvId(i));
+  $("qrUrl").textContent = url;
+  if (!$("qrDlg").open) $("qrDlg").showModal();
+}
+$("qrBtn").onclick = showQR;
+
+// clock
+const fmt = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", timeZoneName: "short" });
+const tick = () => $("clock").textContent = fmt.format(new Date());
+tick(); setInterval(tick, 1000);
+
+// cursor readout
+addEventListener("pointermove", e => {
+  $("xy").textContent = `x ${String(Math.round(e.clientX)).padStart(4, "0")} · y ${String(Math.round(e.clientY)).padStart(4, "0")}`;
+}, { passive: true });
+
+// keys
+addEventListener("keydown", e => {
+  if (e.metaKey || e.ctrlKey || e.altKey || $("qrDlg").open) return;
+  const n = +e.key;
+  if (n >= 1 && n <= PEOPLE.length) location.hash = "#/" + n;
+  else if (e.key === "Escape") location.hash = "#";
+  else if (e.key.toLowerCase() === "q") showQR();
+});
+</script>
+</body>
+</html>
